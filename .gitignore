@@ -20,3 +20,5 @@ npm-debug.log*
 .cache/
 dist/
 node_modules/
+
+.vercel

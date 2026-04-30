@@ -1,0 +1,6 @@
+{
+  "_comment": "Copy to settings.local.json and customize. settings.local.json is gitignored.",
+  "permissions": {
+    "allow": []
+  }
+}

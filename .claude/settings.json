@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(.env.local)",
+      "Read(.env.production)",
+      "Read(./secrets/**)",
+      "Read(.claude/settings.local.json)",
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(sudo:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Write(app/data.js)"
+    ],
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)",
+      "Bash(python -m http.server:*)",
+      "Bash(npx serve:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npx http-server:*)",
+      "Bash(start Dermaapp.html)",
+      "Bash(open Dermaapp.html)",
+      "Bash(ls:*)",
+      "Bash(file:*)",
+      "Bash(wc:*)",
+      "Read(./app/**)",
+      "Read(./Dermaapp.html)",
+      "Read(./README.md)",
+      "Edit(./app/styles.css)",
+      "Edit(./app/app.js)",
+      "Edit(./Dermaapp.html)",
+      "Edit(./README.md)"
+    ]
+  }
+}

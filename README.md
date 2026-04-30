@@ -52,4 +52,9 @@ Das Verzeichnis ist statisch und kann auf jedem Static Host deployt werden, z. B
 
 ## Lizenz
 
-Open Educational Resource. Inhalte orientieren sich an der SGDV-Facharztprüfung. Verwendung im Studium und in der Weiterbildung erlaubt und erwünscht.
+Dual-Lizenz für Code und Inhalte:
+
+- **Code** (HTML, CSS, JS, Konfig): [MIT-Lizenz](LICENSE) — frei verwendbar inkl. kommerziell.
+- **Lerninhalte** (`app/data.js`, Fragen, Antworten, Mnemonics): [CC BY-NC-SA 4.0](LICENSE-CONTENT.md) — Namensnennung, nicht kommerziell, Weitergabe unter gleichen Bedingungen.
+
+Inhalte orientieren sich an der SGDV-Facharztprüfung. Verwendung im Studium und in der Weiterbildung erlaubt und erwünscht.

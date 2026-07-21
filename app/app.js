@@ -264,7 +264,7 @@ function refreshSidebar() {
         ${SECTION_IDS.filter(sectionHasItems).map(ringHtml).join("")}
       </div>
     </div>
-    <div class="side-card">
+    <div class="side-card side-card-keys">
       <div class="side-head">Tastatur</div>
       <div class="about" style="font-family:var(--mono); font-size:11px; line-height:2;">
         <div><span class="kbd">←</span><span class="kbd">→</span> · Navigation</div>
@@ -765,6 +765,7 @@ function renderMix() {
       <div class="actions">
         <button class="btn secondary" id="mixPrev"><span class="btn-arrow">←</span> Zurück</button>
         <button class="btn" id="mixNext">Weiter <span class="btn-arrow">→</span></button>
+        <button class="btn ghost" id="mixRand">Zufall</button>
         ${extraAct}
         <span class="actions-spacer"></span>
         <span class="kbd-hint">Mix-Modus · zufällige Mischung</span>
@@ -802,6 +803,12 @@ function renderMix() {
   });
   document.getElementById("mixPrev").addEventListener("click", () => {
     state.shuffled.pos = Math.max(0, state.shuffled.pos - 1);
+    state.answered = false; state.selection = null; state.clozeAnswers = null;
+    renderMix();
+  });
+  document.getElementById("mixRand").addEventListener("click", () => {
+    // Jump to a random position in the shuffled mix deck (mobile has no R key)
+    state.shuffled.pos = Math.floor(Math.random() * state.shuffled.items.length);
     state.answered = false; state.selection = null; state.clozeAnswers = null;
     renderMix();
   });

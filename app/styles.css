@@ -136,7 +136,6 @@ input, textarea { font-family: inherit; color: inherit; }
 }
 @media (max-width: 1100px) {
   .app { grid-template-columns: 1fr; }
-  .sidebar { order: -1; }
 }
 
 /* ============================================================
@@ -150,7 +149,7 @@ input, textarea { font-family: inherit; color: inherit; }
 }
 .hero-title {
   font-family: var(--serif); font-weight: 500;
-  font-size: clamp(40px, 5.4vw, 78px);
+  font-size: clamp(32px, 5.4vw, 78px);
   line-height: 0.98; letter-spacing: -0.035em;
   color: var(--ink);
 }
@@ -328,7 +327,7 @@ input, textarea { font-family: inherit; color: inherit; }
 }
 .q-text {
   font-family: var(--serif); font-weight: 500;
-  font-size: 26px; line-height: 1.32; letter-spacing: -0.015em;
+  font-size: clamp(20px, 3.4vw + 8px, 26px); line-height: 1.32; letter-spacing: -0.015em;
   color: var(--ink);
   text-wrap: pretty;
 }
@@ -362,7 +361,7 @@ input, textarea { font-family: inherit; color: inherit; }
 .flip-back .flip-corner { color: rgba(244,239,232,.45); }
 .flip-q, .flip-a {
   font-family: var(--serif); font-weight: 500;
-  font-size: 28px; line-height: 1.3; letter-spacing: -0.015em;
+  font-size: clamp(21px, 3.8vw + 8px, 28px); line-height: 1.3; letter-spacing: -0.015em;
   flex: 1; display: flex; align-items: center;
   text-wrap: pretty;
 }
@@ -459,7 +458,7 @@ input, textarea { font-family: inherit; color: inherit; }
   padding: 3px 7px; background: var(--ink); color: var(--paper);
 }
 .tf-mark {
-  font-family: var(--serif); font-size: 56px; font-weight: 500;
+  font-family: var(--serif); font-size: clamp(40px, 10vw, 56px); font-weight: 500;
   line-height: 1; color: var(--ink);
 }
 .tf-card.true .tf-mark  { color: var(--good); }
@@ -507,10 +506,10 @@ input, textarea { font-family: inherit; color: inherit; }
 .q-text.cloze { line-height: 2; }
 .cloze-input {
   display: inline-block;
-  min-width: 120px; padding: 4px 10px;
+  min-width: clamp(80px, 24vw, 120px); padding: 4px 10px;
   background: transparent;
   border: 0; border-bottom: 1.5px solid var(--ink);
-  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  font-family: var(--serif); font-weight: 500; font-size: clamp(17px, 3vw + 6px, 22px);
   color: var(--accent);
   outline: none;
   transition: all .25s;
@@ -737,4 +736,109 @@ input, textarea { font-family: inherit; color: inherit; }
   padding: 80px 0; text-align: center;
   font-family: var(--serif); font-style: italic;
   font-size: 22px; color: var(--ink-mute);
+}
+
+/* ============================================================
+   RESPONSIVE & TOUCH
+   ============================================================ */
+
+/* Prevent iOS landscape font inflation + remove default tap flash */
+html {
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Eliminate double-tap zoom delay on rapid-fire quiz interactions */
+.btn, .chip, .tab, .option, .tf-card, .match-item, .flip, .cloze-input, #resetBtn {
+  touch-action: manipulation;
+}
+
+/* Long German medical terms: hyphenate (html lang="de"), never overflow */
+.q-text, .flip-q, .flip-a, .option, .match-item, .feedback, .reveal,
+.hero-sub, .about, .ring-title, .image-caption {
+  overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto;
+}
+.cloze-input { max-width: 100%; }
+
+/* Layout guards that also help desktop edge cases */
+.footer-row { flex-wrap: wrap; gap: 8px 16px; }
+.card-head { flex-wrap: wrap; gap: 6px 12px; }
+
+@media (max-width: 900px) {
+  /* Hero: the fixed 320px stats column can never fit below ~900px */
+  .hero { grid-template-columns: 1fr; gap: 28px; padding: 28px 0 36px; align-items: start; }
+
+  /* Tabs wrap to 4x2 (existing rule above): add the missing row separator.
+     .tabs-pill is child #1, so tabs are children 2-9 */
+  .tab:nth-child(-n+5) { border-bottom: 1px solid var(--line); }
+  .tab:nth-child(5), .tab:nth-child(9) { border-right: 0; }
+}
+
+@media (max-width: 640px) {
+  /* Shell */
+  .app { padding: 20px 16px 56px; gap: 28px; }
+  .content-shell { padding-top: 24px; min-height: 380px; }
+  .content { padding: 24px 18px 22px; }
+  .sidebar { padding-top: 0; gap: 14px; }
+  .side-card { padding: 18px 16px; }
+
+  /* Topbar: keep brand + SGDV badge, drop session text + long date */
+  .topbar { padding: 12px 16px; }
+  .topbar-meta { gap: 12px; }
+  .topbar-meta > span:not(.swiss-badge) { display: none; }
+
+  /* Hero */
+  .hero-sub { margin-top: 16px; font-size: 15px; }
+  .hero-stat { padding: 14px 12px; }
+
+  /* Controls: label becomes its own row, drop the divider */
+  .controls { padding: 16px 0; gap: 10px; }
+  .controls-label { border-right: 0; padding-right: 0; width: 100%; }
+
+  /* Tabs: compress 4x2 cells (~86px each at 375px) */
+  .tabs-wrap { padding: 18px 0 22px; }
+  .tab { padding: 12px 8px 10px; font-size: 12px; gap: 4px; }
+  .tab-icon { width: 16px; height: 16px; }
+
+  /* Flashcard: absolute children cannot grow the flip container */
+  .flip { min-height: 340px; }
+  .flip-side { padding: 24px 18px; overflow-y: auto; }
+
+  /* TF: stay 2-up (two big tap zones side by side), just smaller */
+  .tf-grid { gap: 10px; }
+  .tf-card { padding: 20px 16px; min-height: 120px; }
+
+  /* Match: stack columns; tap-pairing works sequentially */
+  .match-wrap { grid-template-columns: 1fr; gap: 22px; }
+
+  /* Feedback / reveal / image */
+  .feedback { padding: 14px 16px; }
+  .reveal { padding: 18px; }
+  .image-frame { padding: 14px; min-height: 160px; }
+
+  /* Footer: stack */
+  .footer-row { flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 24px; }
+}
+
+/* Press feedback, matching the existing hover language */
+.btn:active { transform: translateY(1px); }
+.btn.ghost:active { transform: none; color: var(--ink); }
+.option:active:not(.disabled) { background: var(--paper-3); border-left-color: var(--ink); }
+.chip:active:not(.active) { background: var(--paper-2); }
+.tf-card:active { transform: scale(.99); }
+.match-item:active:not(.matched) { background: var(--paper-3); }
+.tab:active:not(.active) { background: var(--paper-2); }
+
+@media (hover: none) and (pointer: coarse) {
+  /* 44px minimum touch targets */
+  .btn { min-height: 44px; padding: 12px 20px; }
+  .chip { min-height: 42px; padding: 10px 16px; }
+  .match-item { min-height: 44px; padding: 14px 16px; }
+  .tab { min-height: 44px; }
+  #resetBtn { padding: 12px 4px; }
+
+  /* Keyboard UI is meaningless on touch */
+  .side-card-keys { display: none; }
+  .kbd-hint:has(.kbd) { display: none; } /* keeps match mistake counter + mix label (no .kbd child) */
+  .tf-key { display: none; }
 }

@@ -25,10 +25,18 @@
   --bad-soft:     #B43A2E18;
 
   /* Section accents – muted, editorial */
+  --sec2:         #4A6A70;   /* slate teal */
   --sec3:         #2F6B3F;   /* moss */
   --sec4:         #B43A2E;   /* sienna */
   --sec5:         #2F4B6B;   /* indigo */
   --sec6:         #8B6A2F;   /* ochre */
+  --sec7:         #7A3B52;   /* plum */
+  --sec8:         #6B5A2F;   /* olive bronze */
+  --sec10:        #5B4B7A;   /* muted violet */
+  --sec11:        #2F6B66;   /* teal green */
+  --sec12:        #9A4B32;   /* rust */
+  --sec13:        #4A5A6B;   /* steel */
+  --sec20:        #6B4A2F;   /* leather brown */
 
   --sans:   "Manrope", -apple-system, "Helvetica Neue", Arial, sans-serif;
   --serif:  "Fraunces", "Times New Roman", Georgia, serif;
@@ -286,10 +294,18 @@ input, textarea { font-family: inherit; color: inherit; }
   color: var(--ink-2);
 }
 .section-tag .swatch { width: 8px; height: 8px; flex-shrink: 0; }
+.section-tag.s2 .swatch { background: var(--sec2); }
 .section-tag.s3 .swatch { background: var(--sec3); }
 .section-tag.s4 .swatch { background: var(--sec4); }
 .section-tag.s5 .swatch { background: var(--sec5); }
 .section-tag.s6 .swatch { background: var(--sec6); }
+.section-tag.s7 .swatch { background: var(--sec7); }
+.section-tag.s8 .swatch { background: var(--sec8); }
+.section-tag.s10 .swatch { background: var(--sec10); }
+.section-tag.s11 .swatch { background: var(--sec11); }
+.section-tag.s12 .swatch { background: var(--sec12); }
+.section-tag.s13 .swatch { background: var(--sec13); }
+.section-tag.s20 .swatch { background: var(--sec20); }
 .card-pos {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.18em; text-transform: uppercase;

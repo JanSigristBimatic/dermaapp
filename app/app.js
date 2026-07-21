@@ -5,11 +5,43 @@
 const STORAGE_KEY = "dermaapp_v1";
 
 const SECTION_LABELS = {
-  3: { name: "Papulosquamös & Ekzem",       sec: "s3" },
-  4: { name: "Urtikaria & Erytheme",        sec: "s4" },
-  5: { name: "Blasenbildende Dermatosen",   sec: "s5" },
-  6: { name: "Adnexorgane",                  sec: "s6" }
+  2:  { name: "Pruritus & Psyche",           sec: "s2" },
+  3:  { name: "Papulosquamös & Ekzem",       sec: "s3" },
+  4:  { name: "Urtikaria & Erytheme",        sec: "s4" },
+  5:  { name: "Blasenbildende Dermatosen",   sec: "s5" },
+  6:  { name: "Adnexorgane",                 sec: "s6" },
+  7:  { name: "Rheumatologische Dermatologie", sec: "s7" },
+  8:  { name: "Metabolisch & Systemisch",    sec: "s8" },
+  10: { name: "Pigmentierungsstörungen",     sec: "s10" },
+  11: { name: "Haare, Nägel & Schleimhäute", sec: "s11" },
+  12: { name: "Infektionen & Infestationen", sec: "s12" },
+  13: { name: "Physikalische Noxen",         sec: "s13" },
+  20: { name: "Medikamente",                 sec: "s20" }
 };
+
+// Section chip labels (short) shown in the Bereich filter
+const SECTION_CHIPS = {
+  2:  "Sec 2 · Pruritus",
+  3:  "Sec 3 · Papulosquamös",
+  4:  "Sec 4 · Urtikaria",
+  5:  "Sec 5 · Blasenbildend",
+  6:  "Sec 6 · Adnexe",
+  7:  "Sec 7 · Rheumatologie",
+  8:  "Sec 8 · Metabolisch",
+  10: "Sec 10 · Pigment",
+  11: "Sec 11 · Haare/Nägel",
+  12: "Sec 12 · Infektionen",
+  13: "Sec 13 · Physik. Noxen",
+  20: "Medikamente"
+};
+
+const SECTION_IDS = Object.keys(SECTION_LABELS).map(Number);
+function emptyPerSection() {
+  return SECTION_IDS.reduce((acc, s) => { acc[s] = { r: 0, t: 0 }; return acc; }, {});
+}
+function sectionHasItems(s) {
+  return [FLASH, MC, TF, CLOZE, MATCH, FREETEXT, IMG].some(arr => arr.some(x => x.s === s));
+}
 
 const MODES = [
   { id: "flash",    label: "Karteikarten",   num: "01", icon: iconCard },
@@ -25,7 +57,7 @@ const MODES = [
 let state = {
   section: "all",
   mode: "flash",
-  score: { right: 0, total: 0, streak: 0, best: 0, perMode: {}, perSection: { 3:{r:0,t:0}, 4:{r:0,t:0}, 5:{r:0,t:0}, 6:{r:0,t:0} } },
+  score: { right: 0, total: 0, streak: 0, best: 0, perMode: {}, perSection: emptyPerSection() },
   index: 0,
   flipped: false,
   answered: false,
@@ -41,7 +73,7 @@ function loadState() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved && saved.score) {
       state.score = { ...state.score, ...saved.score };
-      state.score.perSection = { 3:{r:0,t:0}, 4:{r:0,t:0}, 5:{r:0,t:0}, 6:{r:0,t:0}, ...(saved.score.perSection||{}) };
+      state.score.perSection = { ...emptyPerSection(), ...(saved.score.perSection||{}) };
     }
   } catch (e) {}
 }
@@ -108,11 +140,11 @@ function renderHero() {
     <div>
       <div class="q-eyebrow" style="margin-bottom:18px;">Facharztprüfung Dermatologie · Vorbereitung</div>
       <h1 class="hero-title slide-up">Klare Vorbereitung<br>auf die <em>Facharzt­prüfung</em>.</h1>
-      <p class="hero-sub slide-up">Strukturierte Lerneinheiten zu Sections 3–6: Papulosquamöse Erkrankungen, Urtikaria & Erytheme, blasenbildende Dermatosen und Adnexorgane. Acht Lernmodi, evidenzbasierte Inhalte, lokal gespeicherter Fortschritt.</p>
+      <p class="hero-sub slide-up">Strukturierte Lerneinheiten quer durch die Sections der Facharztprüfung: von papulosquamösen Erkrankungen über bullöse Dermatosen, Kollagenosen, Infektionen und Pigmentstörungen bis zur dermatologischen Pharmakologie. Acht Lernmodi, evidenzbasierte Inhalte, lokal gespeicherter Fortschritt.</p>
     </div>
     <div class="hero-stats">
       <div class="hero-stat"><div class="hero-stat-label">Lerninhalte</div><div class="hero-stat-value">${totalCount()}</div></div>
-      <div class="hero-stat"><div class="hero-stat-label">Sections</div><div class="hero-stat-value">4</div></div>
+      <div class="hero-stat"><div class="hero-stat-label">Bereiche</div><div class="hero-stat-value">${SECTION_IDS.filter(sectionHasItems).length}</div></div>
       <div class="hero-stat"><div class="hero-stat-label">Lernmodi</div><div class="hero-stat-value accent">8</div></div>
       <div class="hero-stat"><div class="hero-stat-label">Kosten</div><div class="hero-stat-value">CHF 0</div></div>
     </div>
@@ -121,15 +153,12 @@ function renderHero() {
 
 function renderControls() {
   const counts = { all: totalCount() };
-  [3,4,5,6].forEach(s => {
+  SECTION_IDS.forEach(s => {
     counts[s] = [FLASH, MC, TF, CLOZE, MATCH, FREETEXT, IMG].reduce((acc, arr) => acc + arr.filter(x => x.s === s).length, 0);
   });
   const chips = [
     { id: "all", label: "Alle Bereiche" },
-    { id: "3", label: "Sec 3 · Papulosquamös" },
-    { id: "4", label: "Sec 4 · Urtikaria" },
-    { id: "5", label: "Sec 5 · Blasenbildend" },
-    { id: "6", label: "Sec 6 · Adnexe" }
+    ...SECTION_IDS.filter(s => counts[s] > 0).map(s => ({ id: String(s), label: SECTION_CHIPS[s] }))
   ];
   document.getElementById("controls").innerHTML = `
     <span class="controls-label">Bereich</span>
@@ -232,7 +261,7 @@ function refreshSidebar() {
     <div class="side-card">
       <div class="side-head">Kompetenz nach Bereich</div>
       <div class="ring-list">
-        ${[3,4,5,6].map(ringHtml).join("")}
+        ${SECTION_IDS.filter(sectionHasItems).map(ringHtml).join("")}
       </div>
     </div>
     <div class="side-card">
@@ -830,7 +859,7 @@ function init() {
   render();
   document.getElementById("resetBtn").addEventListener("click", () => {
     if (confirm("Score wirklich zurücksetzen?")) {
-      state.score = { right:0, total:0, streak:0, best:0, perMode:{}, perSection:{ 3:{r:0,t:0}, 4:{r:0,t:0}, 5:{r:0,t:0}, 6:{r:0,t:0} } };
+      state.score = { right:0, total:0, streak:0, best:0, perMode:{}, perSection: emptyPerSection() };
       saveState(); refreshSidebar();
     }
   });

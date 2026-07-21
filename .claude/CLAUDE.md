@@ -17,12 +17,23 @@ Open-Education-Lernapp für die Facharztprüfung **Dermatologie** im DACH-Raum (
 
 ```
 Dermaapp/
-├── Dermaapp.html       # Entry-Point, lädt app/styles.css + app/data.js + app/app.js
+├── Dermaapp.html       # Entry-Point, lädt styles.css + data.js + content/*.js + app.js
 └── app/
     ├── styles.css      # Swiss-editorial Design-System (Fraunces + Manrope + JetBrains Mono)
-    ├── data.js         # Globale Konstanten: FLASH, MC, MATCH, CLOZE, TF, FREE, IMG (200+ Items)
-    └── app.js          # State-Maschine, 8 Lernmodi, Render-Logik
+    ├── data.js         # Globale Konstanten FLASH, MC, MATCH, CLOZE, TF, FREETEXT, IMG (Basis-Items Sektion 3-6)
+    ├── app.js          # State-Maschine, 8 Lernmodi, Render-Logik (Sektionen dynamisch aus SECTION_LABELS)
+    └── content/        # Pro Sektion eine Datei, hängt via IIFE an die globalen Arrays an
+        ├── sec02.js    # Pruritus & Psyche (Cap 50)
+        ├── sec03.js … sec06.js   # Erweiterungen der Basis-Sektionen
+        ├── sec07.js, sec08.js, sec10.js, sec11.js, sec12.js, sec13.js
+        └── medis.js    # Medikamente/Pharmakologie (Sektion s:20)
 ```
+
+**Content-Dateien:** Jede `content/secNN.js` ist eine IIFE, die lokale Arrays definiert und
+mit `FLASH.push(...)` etc. an die in `data.js` deklarierten Globals anhängt. Neue Sektionen
+werden ausschliesslich in `SECTION_LABELS`/`SECTION_CHIPS` (`app.js`) registriert; Filter-Chips,
+Sidebar-Ringe und `perSection` leiten sich davon dynamisch ab. Für eine neue Sektion zusätzlich
+das Script-Tag in `Dermaapp.html` und ein `--secNN`-Token samt `.section-tag.sNN` in `styles.css`.
 
 ## Design-System (Tokens in `app/styles.css :root`)
 
@@ -31,7 +42,7 @@ Dermaapp/
 | `--paper` | `#F4EFE8` | Hintergrund (warmes Off-White) |
 | `--ink` | `#1B1A18` | Haupttext |
 | `--accent` | `#B43A2E` | Sienna-Rot (Schweizer-Kreuz-Derivat), Marker, CTAs |
-| `--sec3..6` | moss/sienna/indigo/ochre | Sektion-Codes 3 bis 6 |
+| `--sec2..sec20` | muted editorial Farbtöne | Sektion-Codes (2,3,4,5,6,7,8,10,11,12,13,20) |
 | `--serif` | Fraunces | Display, Brandname, Hero |
 | `--sans` | Manrope | UI |
 | `--mono` | JetBrains Mono | medizinische IDs, Mode-Nummern, Codes |
@@ -47,24 +58,26 @@ Dermaapp/
 | 03 | `match` | `MATCH[]` |
 | 04 | `cloze` | `CLOZE[]` |
 | 05 | `tf` | `TF[]` |
-| 06 | `freetext` | `FREE[]` |
+| 06 | `freetext` | `FREETEXT[]` |
 | 07 | `image` | `IMG[]` |
 | 08 | `mix` | alle gemischt |
 
-**Sektion-Filter:** `all`, `3`, `4`, `5`, `6` (siehe `SECTION_LABELS` in `app/app.js`).
+**Sektion-Filter:** `all` plus alle Sektionen mit Inhalten: `2,3,4,5,6,7,8,10,11,12,13,20` (`20` = Medikamente). Chips werden dynamisch aus `SECTION_LABELS`/`SECTION_CHIPS` (`app/app.js`) erzeugt und nur angezeigt, wenn die Sektion Items hat.
 
 ## Datenmodell
 
-Jedes Item hat `s` (Sektion 3-6) plus modus-spezifische Felder:
+Jedes Item hat `s` (Sektionsnummer) plus modus-spezifische Felder:
 - Flash: `{s, q, a}`
-- MC: `{s, q, options[], correct}`
-- TF: `{s, q, a}` (`a` = boolean)
-- Cloze: `{s, text, blanks[]}`
-- Match: `{s, pairs[]}`
-- Free: `{s, q, accept[]}`
-- Image: `{s, src, q, ...}`
+- MC: `{s, q, o:[4 Optionen], c:Index 0-3, e:Erklärung}`
+- TF: `{s, st:Aussage, c:boolean, e:Erklärung}`
+- Cloze: `{s, parts:[Text,"BLANK",…], a:[Lösungen]}` (Anzahl `"BLANK"` == Länge `a`)
+- Match: `{s, t:Titel, p:[[links,rechts],…]}`
+- Freetext: `{s, q, a:Musterlösung}`
+- Image: `{s, cap, q, o:[4], c, e, svg:\`<svg…>\`}` (self-contained SVG, keine externen Referenzen)
 
-**Beim Hinzufügen neuer Items:** Sektion-ID konsistent halten, `app.js` muss nicht angepasst werden.
+**Beim Hinzufügen neuer Items:** Sektion-ID konsistent halten. Für bestehende Sektionen genügt
+Anhängen in der passenden `content/secNN.js`. Für eine neue Sektion siehe oben (SECTION_LABELS +
+Script-Tag + CSS-Token).
 
 ## Tastatur-Shortcuts (in `app.js` registriert)
 
@@ -115,4 +128,4 @@ Jedes Item hat `s` (Sektion 3-6) plus modus-spezifische Felder:
 - `animejs-animation-expert` **nur** wenn der User Animationen explizit ausbauen will (aktuell pures CSS, keine Library)
 - `seo-aio-optimizer` falls eine öffentliche Landingpage entsteht
 
-**Last Updated:** 2026-04-30
+**Last Updated:** 2026-07-21

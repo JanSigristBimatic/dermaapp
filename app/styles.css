@@ -36,6 +36,11 @@
   --sec11:        #2F6B66;   /* teal green */
   --sec12:        #9A4B32;   /* rust */
   --sec13:        #4A5A6B;   /* steel */
+  --sec14:        #9A5A6B;   /* dusty rose */
+  --sec15:        #6B7A4A;   /* sage olive */
+  --sec16:        #B07A3A;   /* caramel */
+  --sec17:        #3E5F8A;   /* slate blue */
+  --sec18:        #6B2F3A;   /* burgundy */
   --sec20:        #6B4A2F;   /* leather brown */
 
   --sans:   "Manrope", -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -304,6 +309,11 @@ input, textarea { font-family: inherit; color: inherit; }
 .section-tag.s11 .swatch { background: var(--sec11); }
 .section-tag.s12 .swatch { background: var(--sec12); }
 .section-tag.s13 .swatch { background: var(--sec13); }
+.section-tag.s14 .swatch { background: var(--sec14); }
+.section-tag.s15 .swatch { background: var(--sec15); }
+.section-tag.s16 .swatch { background: var(--sec16); }
+.section-tag.s17 .swatch { background: var(--sec17); }
+.section-tag.s18 .swatch { background: var(--sec18); }
 .section-tag.s20 .swatch { background: var(--sec20); }
 .card-pos {
   font-family: var(--mono); font-size: 10px;
@@ -536,6 +546,7 @@ input, textarea { font-family: inherit; color: inherit; }
   min-height: 220px;
 }
 .image-frame svg { width: 100%; max-width: 480px; height: auto; }
+.image-frame img { display: block; max-width: 100%; max-height: 440px; width: auto; height: auto; }
 .image-caption {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.16em; text-transform: uppercase;

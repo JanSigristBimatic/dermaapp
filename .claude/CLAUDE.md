@@ -22,10 +22,12 @@ Dermaapp/
     ├── styles.css      # Swiss-editorial Design-System (Fraunces + Manrope + JetBrains Mono)
     ├── data.js         # Globale Konstanten FLASH, MC, MATCH, CLOZE, TF, FREETEXT, IMG (Basis-Items Sektion 3-6)
     ├── app.js          # State-Maschine, 8 Lernmodi, Render-Logik (Sektionen dynamisch aus SECTION_LABELS)
+    ├── img/            # Klinische Fotos fürs Bildquiz (JPEG, max. 800 px Kante, `sNN-<thema>.jpg`)
     └── content/        # Pro Sektion eine Datei, hängt via IIFE an die globalen Arrays an
         ├── sec02.js    # Pruritus & Psyche (Cap 50)
         ├── sec03.js … sec06.js   # Erweiterungen der Basis-Sektionen
         ├── sec07.js, sec08.js, sec10.js, sec11.js, sec12.js, sec13.js
+        ├── sec14.js … sec18.js   # Histiozytosen, Bindegewebe, Pannikulitis, Vaskulär, Onkologie
         └── medis.js    # Medikamente/Pharmakologie (Sektion s:20)
 ```
 
@@ -42,7 +44,7 @@ das Script-Tag in `Dermaapp.html` und ein `--secNN`-Token samt `.section-tag.sNN
 | `--paper` | `#F4EFE8` | Hintergrund (warmes Off-White) |
 | `--ink` | `#1B1A18` | Haupttext |
 | `--accent` | `#B43A2E` | Sienna-Rot (Schweizer-Kreuz-Derivat), Marker, CTAs |
-| `--sec2..sec20` | muted editorial Farbtöne | Sektion-Codes (2,3,4,5,6,7,8,10,11,12,13,20) |
+| `--sec2..sec20` | muted editorial Farbtöne | Sektion-Codes (2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,20) |
 | `--serif` | Fraunces | Display, Brandname, Hero |
 | `--sans` | Manrope | UI |
 | `--mono` | JetBrains Mono | medizinische IDs, Mode-Nummern, Codes |
@@ -62,7 +64,7 @@ das Script-Tag in `Dermaapp.html` und ein `--secNN`-Token samt `.section-tag.sNN
 | 07 | `image` | `IMG[]` |
 | 08 | `mix` | alle gemischt |
 
-**Sektion-Filter:** `all` plus alle Sektionen mit Inhalten: `2,3,4,5,6,7,8,10,11,12,13,20` (`20` = Medikamente). Chips werden dynamisch aus `SECTION_LABELS`/`SECTION_CHIPS` (`app/app.js`) erzeugt und nur angezeigt, wenn die Sektion Items hat.
+**Sektion-Filter:** `all` plus alle Sektionen mit Inhalten: `2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,20` (`20` = Medikamente). Chips werden dynamisch aus `SECTION_LABELS`/`SECTION_CHIPS` (`app/app.js`) erzeugt und nur angezeigt, wenn die Sektion Items hat.
 
 ## Datenmodell
 
@@ -73,7 +75,7 @@ Jedes Item hat `s` (Sektionsnummer) plus modus-spezifische Felder:
 - Cloze: `{s, parts:[Text,"BLANK",…], a:[Lösungen]}` (Anzahl `"BLANK"` == Länge `a`)
 - Match: `{s, t:Titel, p:[[links,rechts],…]}`
 - Freetext: `{s, q, a:Musterlösung}`
-- Image: `{s, cap, q, o:[4], c, e, svg:\`<svg…>\`}` (self-contained SVG, keine externen Referenzen)
+- Image: `{s, cap, q, o:[4], c, e, svg:\`<svg…>\`}` (self-contained SVG, keine externen Referenzen) **oder** `{…, src:"app/img/sNN-thema.jpg", alt}` (Foto aus `app/img/`; `imageMarkup()` in `app.js` wählt `svg` vor `src`)
 
 **Beim Hinzufügen neuer Items:** Sektion-ID konsistent halten. Für bestehende Sektionen genügt
 Anhängen in der passenden `content/secNN.js`. Für eine neue Sektion siehe oben (SECTION_LABELS +
@@ -128,4 +130,4 @@ Script-Tag + CSS-Token).
 - `animejs-animation-expert` **nur** wenn der User Animationen explizit ausbauen will (aktuell pures CSS, keine Library)
 - `seo-aio-optimizer` falls eine öffentliche Landingpage entsteht
 
-**Last Updated:** 2026-07-21
+**Last Updated:** 2026-10-20

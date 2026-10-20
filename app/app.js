@@ -16,6 +16,11 @@ const SECTION_LABELS = {
   11: { name: "Haare, Nägel & Schleimhäute", sec: "s11" },
   12: { name: "Infektionen & Infestationen", sec: "s12" },
   13: { name: "Physikalische Noxen",         sec: "s13" },
+  14: { name: "Histiozytosen & Granulome",   sec: "s14" },
+  15: { name: "Bindegewebe & Atrophien",     sec: "s15" },
+  16: { name: "Pannikulitis & Lipodystrophie", sec: "s16" },
+  17: { name: "Vaskuläre Störungen",         sec: "s17" },
+  18: { name: "Onkologie",                   sec: "s18" },
   20: { name: "Medikamente",                 sec: "s20" }
 };
 
@@ -32,6 +37,11 @@ const SECTION_CHIPS = {
   11: "Sec 11 · Haare/Nägel",
   12: "Sec 12 · Infektionen",
   13: "Sec 13 · Physik. Noxen",
+  14: "Sec 14 · Histiozytosen",
+  15: "Sec 15 · Bindegewebe",
+  16: "Sec 16 · Pannikulitis",
+  17: "Sec 17 · Vaskulär",
+  18: "Sec 18 · Onkologie",
   20: "Medikamente"
 };
 
@@ -92,6 +102,11 @@ function shuffle(arr) {
 }
 function filterBy(arr) { return state.section === "all" ? arr : arr.filter(x => x.s === parseInt(state.section)); }
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]); }
+
+// Image items carry either an inline SVG (svg) or a photo (src + alt)
+function imageMarkup(item) {
+  return item.svg || `<img src="${item.src}" alt="${escapeHtml(item.alt || item.cap)}" loading="lazy">`;
+}
 
 function sectionChip(s) {
   const meta = SECTION_LABELS[s];
@@ -659,7 +674,7 @@ function renderImage() {
     <div class="stagger">
       ${header(it, "Bildquiz", i+1, total)}
       <div style="height:18px"></div>
-      <div class="image-frame">${it.svg}</div>
+      <div class="image-frame">${imageMarkup(it)}</div>
       <div class="image-caption">${it.cap}</div>
       <h2 class="q-text">${it.q}</h2>
       <div class="options">${opts}</div>
@@ -714,7 +729,7 @@ function renderMix() {
       fb = `<div class="feedback ${correct?'good':'bad'}"><div class="feedback-title ${correct?'good':'bad'}">${correct?'Richtig':'Falsch'}</div><div>${data.e}</div></div>`;
     }
     body = `
-      ${cur.type === "image" ? `<div style="height:18px"></div><div class="image-frame">${data.svg}</div><div class="image-caption">${data.cap}</div>` : '<div class="q-eyebrow" style="margin-top:24px;">Frage</div>'}
+      ${cur.type === "image" ? `<div style="height:18px"></div><div class="image-frame">${imageMarkup(data)}</div><div class="image-caption">${data.cap}</div>` : '<div class="q-eyebrow" style="margin-top:24px;">Frage</div>'}
       <h2 class="q-text">${data.q}</h2>
       <div class="options">${opts}</div>
       ${fb}
